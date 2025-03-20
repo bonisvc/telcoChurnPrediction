@@ -24,7 +24,7 @@ telco-churn-prediction/
 ├── data/
 │  ├── raw/                                       <- Dados brutos (originais do dataset)
 │  └── processed/                                 <- Dados pré-processados, prontos para o modelo
-├── notebooks/
+├── scripts/
 │  ├── 01-exploratory-data-analysis.ipynb         <- Análise exploratória dos dados
 │  ├── 02-data-preprocessing.ipynb                <- Pré-processamento e feature engineering
 │  ├── 03-model-training.ipynb                    <- Treinamento e avaliação de modelos
