@@ -13,16 +13,39 @@ with open('/content/drive/MyDrive/credentials.txt', 'r') as f:
 username=credentials['username']
 email=credentials['email']
 token=credentials['token']
+import os
 
+credentials = {}
 try:
-  %cd telcoChurnPrediction #change to repo directory
-except Exception as e:
-  print(e)
-finally:
-  !git config --global user.name '$username'
-  !git config --global user.email '$email'
-  !git remote set-url origin https://$username:$token@github.com/$username/telcoChurnPrediction.git
+    with open('/content/drive/MyDrive/credentials.txt', 'r') as f:
+        for line in f:
+            key, value = line.strip().split('=')
+            credentials[key] = value
 
+    username = credentials['username']
+    email = credentials['email']
+    token = credentials['token']
+
+    if not all(key in credentials for key in ('username', 'email', 'token')):
+        raise ValueError("Credenciais incompletas no arquivo credentials.txt")
+
+    try:
+        %cd telcoChurnPrediction
+    except Exception as e:
+        print(f"Erro ao mudar de diretório: {e}")
+
+    try:
+        !git config --global user.name '$username'
+        !git config --global user.email '$email'
+        !git remote set-url origin https://$username:$token@github.com/$username/telcoChurnPrediction.git
+        !git push origin main
+        !git remote set-url origin https://github.com/$username/telcoChurnPrediction.git #remove o token da url
+
+    except Exception as git_error:
+        print(f"Erro ao executar comandos Git: {git_error}")
+
+except Exception as overall_error:
+    print(f"Erro geral: {overall_error}")
 !pip install lifelines
 
 import pandas as pd
@@ -166,7 +189,11 @@ finally:
 
   print(f"Script salvo em: {arquivo_py}")
 
-!git add
-!git commit -m ''
-!git push origin main
+!git config --global user.name '$username'
+!git config --global user.email '$email'
+
+!git add /content/telcoChurnPrediction
+!git pull origin main
+!git commit -m 'exploratory analysis script & processed data'
+!git push https://$username:$token@github.com/$username/telcoChurnPrediction.git main
 !rm -rf /content/telcoChurnPrediction
